@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: "Montserrat", sans-serif;
+        }
+
+        h4 {
+            display: inline-block;
+        }
+
+        h1 {
+            text-align: center;
+            color: rgb(196, 71, 129);
+            margin-top: 5%;
+        }
+
+        select {
+            margin: 15px 10px;
+            background-color: white;
+            width: 40%;
+            border: 1px solid rgba(0, 0, 0, 0.267);
+            height: 35px;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: white;
+            /* color: white; */
+            padding: 10px 10px;
+            font-size: 1em;
+            border: none;
+            border-radius: 10px;
+            display: block;
+            cursor: pointer;
+        }
+
+        #add_btn {
+            border: 2px solid rgb(196, 71, 129);
+            margin-top: 20px;
+        }
+
+        #calculate {
+            background-color: rgba(112, 48, 101, 0.767);
+            color: white;
+            margin: auto;
+            padding: 10px 20px;
+        }
+
+        form {
+            box-shadow: 1px 1px 2px 2px gainsboro;
+            width: 45%;
+            padding: 25px;
+            border-radius: 5px;
+            margin: auto;
+        }
+
+        #table {
+            margin: auto !important;
+            width: 100%;
+        }
+
+        #table td,
+        th {
+            text-align: center;
+            padding: 10px;
+        }
+
+        #table,
+        #table td,
+        #table th {
+            border: 1px solid rgba(100, 1, 84, 0.767);
+            border-collapse: collapse;
+
+        }
+
+        #head th {
+            padding: 0px 50px;
+        }
+
+        hr {
+            width: 100%;
+            border: 1px dashed rgba(163, 35, 142, 0.767);
+            margin: 5% auto;
+        }
+    </style>
+</head>
+
+<script>
+    let sub = 1;
+    function AddSubjects() {
+        sub += 1
+        var field = document.getElementById('subjects').innerHTML
+
+        var values1 = ["Select Grade", "O", "A+", "A", "B+", "B", "U"];
+        var values2 = ["Select Credit", 0, 1, 2, 3, 4];
+
+        var select1 = document.createElement("select");
+        var select2 = document.createElement("select");
+        var br = document.createElement("br");
+        select1.id = `grade${sub}`
+        select2.id = `credit${sub}`
+
+        for (const val of values1) {
+            var option = document.createElement("option");
+            option.value = val;
+            option.text = val;
+            select1.appendChild(option);
+        }
+
+        for (const val of values2) {
+            var option = document.createElement("option");
+            option.value = val;
+            option.text = val;
+            select2.appendChild(option);
+        }
+
+        var label = document.createElement("label");
+        label.innerHTML = `Subject ${sub}`
+
+        document.getElementById("subjects").appendChild(label).appendChild(select1);
+        document.getElementById("subjects").appendChild(select2).appendChild(br)
+       
+    }
+
+    function CalculateCGPA() {
+        var credit_arr = []
+        var grade_arr = []
+        var tot_credit = 0
+        var tot_grade = 0
+
+        for (i = 1; i <= sub; i++) {
+            var grade = document.getElementById(`grade${i}`).value
+            var credit = document.getElementById(`credit${i}`).value
+            credit_arr.push(credit)
+
+            switch (grade) {
+                case 'O':
+                    grade_arr.push(10)
+                    break;
+
+                case 'A+':
+                    grade_arr.push(9)
+                    break;
+
+                case 'A':
+                    grade_arr.push(8)
+                    break;
+
+                case 'B+':
+                    grade_arr.push(7)
+                    break;
+
+                case 'B':
+                    grade_arr.push(6)
+                    break;
+
+                case 'U':
+                    grade_arr.push(0)
+                    break;
+            }
+        }
+        var tot_credit = credit_arr.reduce((tot, num) => Number(tot) + Number(num))
+        var tot_grade = grade_arr.reduce((tot, num) => Number(tot) + Number(num))
+
+        var grade_pt = tot_grade / sub;
+        var gpa = grade_pt * tot_credit;
+        var cgpa = (gpa / 10).toFixed(2);
+        document.getElementById('result').innerHTML = `<hr /><table id='table'>
+        <thead>
+        <th>Your CGPA</th>
+        <th>Total Credits Points</th>
+        <th>Total Grade points</th>
+        </thead>
+        <tr>
+            <td>${cgpa}</td>
+            <td>${tot_credit}</td>
+            <td>${tot_grade}</td>
+        </tr>
+        </table>`
+
+    }
+</script>
+
+<body>
+    <div id="root">
+        <h1>CGPA Calculator</h1>
+        <form id="form">
+            <table id="head">
+                <tr>
+                    <th></th>
+                    <th>Subject Grade</th>
+                    <th>Subject Credits</th>
+                </tr>
+            </table>
+            <label>Subject 1</label><select id="grade1">
+                <option value="">Select Grade</option>
+                <option value="O">O</option>
+                <option value="A+">A+</option>
+                <option value="A">A</option>
+                <option value="B+">B+</option>
+                <option value="B">B</option>
+                <option value="U">U</option>
+            </select><select id="credit1">
+                <option value="">Select Grade</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+
+            <div id="subjects"></div>
+            <button onclick="AddSubjects()" id="add_btn" type="button">Add more subjects</button>
+            <button onclick="CalculateCGPA()" id="calculate" type="button">Calculate CGPA</button>
+            <div id="result"></div>
+        </form>
+    </div>
+</body>
+
+</html>
